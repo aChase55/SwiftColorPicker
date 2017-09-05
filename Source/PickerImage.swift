@@ -110,11 +110,7 @@ open class PickerImage {
                     d?[i+2] = UInt8(p)
                     d?[i+3] = UInt8(q)
                 }
-                
-                
             }
         }
     }
-
-    
 }

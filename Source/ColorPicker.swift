@@ -20,26 +20,25 @@ open class ColorPicker: UIView {
     open var onColorChange:((_ color:UIColor, _ finished:Bool)->Void)? = nil
     
 
-    open var a:CGFloat = 1 {
+    open var a:CGFloat = 1.0 {
         didSet {
-            if a < 0 || a > 1 {
-                a = max(0, min(1, a))
+            if  !(0.0..<1.0).contains(self.a)  {
+                a = max(0.0, min(1.0, a))
             }
         }
     }
 
     open var h:CGFloat = 0 { // // [0,1]
         didSet {
-            if h > 1 || h < 0 {
+            if !(0.0..<1.0).contains(self.h) {
                 h = max(0, min(1, h))
             }
             renderBitmap()
             setNeedsDisplay()
         }
-
     }
-    fileprivate var currentPoint:CGPoint = CGPoint.zero
 
+    fileprivate var currentPoint:CGPoint = CGPoint.zero
 
     open func saturationFromCurrentPoint() -> CGFloat {
         return (1 / bounds.width) * currentPoint.x
@@ -51,10 +50,10 @@ open class ColorPicker: UIView {
     
     open var color:UIColor  {
         set(value) {
-            var hue:CGFloat = 1
-            var saturation:CGFloat = 1
-            var brightness:CGFloat = 1
-            var alpha:CGFloat = 1
+            var hue:CGFloat = 1.0
+            var saturation:CGFloat = 1.0
+            var brightness:CGFloat = 1.0
+            var alpha:CGFloat = 1.0
             value.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
             a = alpha
             if hue != h || pickerImage1 === nil {
@@ -147,13 +146,13 @@ open class ColorPicker: UIView {
     }
     
     fileprivate func renderBitmap() {
-        if self.bounds.isEmpty {
-            return
-        }
-        if !lock.try() {
+        
+        guard !self.bounds.isEmpty else { return }
+        guard lock.try() else {
             rerender = true
             return
         }
+        
         rerender = false
         
         if pickerImage1 == nil {
@@ -179,13 +178,9 @@ open class ColorPicker: UIView {
                     self.renderBitmap()
                 }
             })
-            
         }
-      
     }
     
-
-
     open override func draw(_ rect: CGRect) {
         if let img = image {
             img.draw(in: rect)
@@ -203,5 +198,4 @@ open class ColorPicker: UIView {
         oval2Path.lineWidth = 1
         oval2Path.stroke()
     }
-
 }

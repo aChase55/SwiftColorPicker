@@ -54,7 +54,6 @@ import UIKit
         color.setFill()
         ovalPath.fill()
 
-        
         if let col = previewColor {
             let ovalRect = CGRect(x: 5.5, y: 5.5, width: 35, height: 35)
             let ovalPath = UIBezierPath()
@@ -70,6 +69,4 @@ import UIKit
         ovalPath.lineWidth = borderWidth
         ovalPath.stroke()
     }
-
-
 }
