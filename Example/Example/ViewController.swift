@@ -10,9 +10,9 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    @IBOutlet var colorWell:ColorWell?
-    @IBOutlet var colorPicker:ColorPicker?
-    @IBOutlet var huePicker:HuePicker?
+    @IBOutlet var colorWell:ColorWell!
+    @IBOutlet var colorPicker:ColorPicker!
+    @IBOutlet var huePicker:HuePicker!
     var pickerController:ColorPickerController?
     @IBOutlet var label:UILabel?
 
@@ -20,7 +20,8 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         // The ColorPickerController handels lets you connect a colorWell, a colorPicker and a huepicker. The ColorPickerController takes care of propagating changes between the individual components.
-        pickerController = ColorPickerController(svPickerView: colorPicker!, huePickerView: huePicker!, colorWell: colorWell!)
+        pickerController = ColorPickerController(svPickerView: colorPicker, huePickerView: huePicker, colorWell: nil)
+//        pickerController = ColorPickerController(svPickerView: colorPicker, huePickerView: huePicker, colorWell: colorWell)
         //Instead of setting an initial color on all 3 ColorPicker components, the ColorPickerController lets you set a color which will be propagated to the individual components.
         pickerController?.color = UIColor.red
         

@@ -9,18 +9,6 @@ import UIKit
 
 @IBDesignable open class ColorWell: UIButton {
 
-    @IBInspectable open var color:UIColor = UIColor.cyan {
-        didSet {
-            setNeedsDisplay()
-        }
-    }
-
-
-    open var previewColor:UIColor? {
-        didSet {
-            setNeedsDisplay()
-        }
-    }
     @IBInspectable open var borderColor:UIColor = UIColor.darkGray {
         didSet {
             setNeedsDisplay()
@@ -33,20 +21,31 @@ import UIKit
         }
     }
     
-    func commonInit() {
-        backgroundColor = UIColor.clear
-        isOpaque = false
+    @IBInspectable open var color:UIColor = UIColor.cyan {
+        didSet {
+            setNeedsDisplay()
+        }
     }
     
+    open var previewColor:UIColor? {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
+    
+    public required init?(coder aDecoder: NSCoder) {
+            super.init(coder: aDecoder)
+        commonInit()
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
     }
     
-    public required init?(coder aDecoder: NSCoder) {
-            super.init(coder: aDecoder)
-        commonInit()
+    func commonInit() {
+        backgroundColor = UIColor.clear
+        isOpaque = false
     }
 
     override open func draw(_ rect: CGRect) {

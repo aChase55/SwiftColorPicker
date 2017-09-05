@@ -15,46 +15,49 @@ open class ColorPickerController: NSObject {
     open var huePicker:HuePicker
     
     // Color Well
-    open var colorWell:ColorWell {
+    open var colorWell:ColorWell? {
         didSet {
-            huePicker.setHueFromColor(colorWell.color)
-            colorPicker.color =  colorWell.color
+            if let well = colorWell {
+                huePicker.setHueFromColor(well.color)
+                colorPicker.color = well.color
+            }
         }
     }
-    
     
     // Color Picker
     open var colorPicker:ColorPicker
     
     open var color:UIColor? {
         set(value) {
-            colorPicker.color = value!
-            colorWell.color = value!
-            huePicker.setHueFromColor(value!)
+            if let val = value {
+                colorPicker.color = val
+                colorWell?.color = val
+                huePicker.setHueFromColor(val)
+            }
         }
         get {
             return colorPicker.color
         }
     }
     
-    public init(svPickerView:ColorPicker, huePickerView:HuePicker, colorWell:ColorWell) {
+    public init(svPickerView:ColorPicker, huePickerView:HuePicker, colorWell:ColorWell?) {
         self.huePicker = huePickerView
         self.colorPicker = svPickerView
         self.colorWell = colorWell
-        self.colorWell.color = colorPicker.color
+        self.colorWell?.color = colorPicker.color
         self.huePicker.setHueFromColor(colorPicker.color)
         super.init()
-        self.colorPicker.onColorChange = {(color, finished) -> Void in
+        self.colorPicker.onColorChange = {[unowned self] (color, finished) -> Void in
             self.huePicker.setHueFromColor(color)
-            self.colorWell.previewColor = (finished) ? nil : color
-            if(finished) {self.colorWell.color = color}
+            self.colorWell?.previewColor = (finished) ? nil : color
+            if let well = self.colorWell,finished { well.color = color }
             self.onColorChange?(color, finished)
         }
-        self.huePicker.onHueChange = {(hue, finished) -> Void in
+        self.huePicker.onHueChange = {[unowned self] (hue, finished) -> Void in
             self.colorPicker.h = CGFloat(hue)
             let color = self.colorPicker.color
-            self.colorWell.previewColor = (finished) ? nil : color
-            if(finished) {self.colorWell.color = color}
+            self.colorWell?.previewColor = (finished) ? nil : color
+            if(finished) {self.colorWell?.color = color}
             self.onColorChange?(color, finished)
         }
     }
