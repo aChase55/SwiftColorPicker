@@ -12,7 +12,7 @@ open class ColorPicker: UIView {
 
     fileprivate var pickerImage1:PickerImage?
     fileprivate var pickerImage2:PickerImage?
-    fileprivate var image:UIImage?
+//    fileprivate var image:UIImage?
     fileprivate var data1Shown = false
     fileprivate lazy var opQueue:OperationQueue = {return OperationQueue()}()
     fileprivate var lock:NSLock = NSLock()
@@ -33,7 +33,7 @@ open class ColorPicker: UIView {
             if !(0.0..<1.0).contains(self.h) {
                 h = max(0, min(1, h))
             }
-            renderBitmap()
+//            renderBitmap()
             setNeedsDisplay()
         }
     }
@@ -77,9 +77,23 @@ open class ColorPicker: UIView {
         commonInit()
     }
     
+    var gradientVertical:GradientView?
+    var gradientHorizontal:GradientView?
+    
     func commonInit() {
         isUserInteractionEnabled = true
         clipsToBounds = false
+        
+        let gradientH = GradientView(frame:bounds)
+        gradientH.startColor = .white
+        gradientH.endColor = .red
+        gradientH.isHorizontal = true
+        gradientHorizontal = gradientH
+        addSubview(gradientHorizontal!)
+        
+        gradientVertical = GradientView(frame: bounds)
+        addSubview(gradientVertical!)
+        
         self.addObserver(self, forKeyPath: "bounds", options: [NSKeyValueObservingOptions.new, NSKeyValueObservingOptions.initial], context: nil)
     }
     
@@ -95,7 +109,7 @@ open class ColorPicker: UIView {
             if let pImage2 = pickerImage2 {
                 pImage2.changeSize(Int(self.bounds.width), height: Int(self.bounds.height))
             }
-            renderBitmap()
+//            renderBitmap()
             self.setNeedsDisplay()
         } else {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
@@ -145,48 +159,49 @@ open class ColorPicker: UIView {
         return UIColor(hue: h, saturation: s, brightness: b, alpha:a)
     }
     
-    fileprivate func renderBitmap() {
-        
-        guard !self.bounds.isEmpty else { return }
-        guard lock.try() else {
-            rerender = true
-            return
-        }
-        
-        rerender = false
-        
-        if pickerImage1 == nil {
-            self.pickerImage1 = PickerImage(width: Int(bounds.width), height: Int(bounds.height))
-            self.pickerImage2 = PickerImage(width: Int(bounds.width), height: Int(bounds.height))
-        }
-        
-        opQueue.addOperation { () -> Void in
-            // Write colors to data array
-            if self.data1Shown { self.pickerImage2!.writeColorData(self.h, a:self.a) }
-            else { self.pickerImage1!.writeColorData(self.h, a:self.a)}
-            
-            
-            // flip images
-            self.image = self.data1Shown ? self.pickerImage2!.image! : self.pickerImage1!.image!
-            self.data1Shown = !self.data1Shown
-            
-            // make changes visible
-            OperationQueue.main.addOperation({ () -> Void in
-                self.setNeedsDisplay()
-                self.lock.unlock()
-                if self.rerender {
-                    self.renderBitmap()
-                }
-            })
-        }
-    }
+//    fileprivate func renderBitmap() {
+//
+//        guard !self.bounds.isEmpty else { return }
+//        guard lock.try() else {
+//            rerender = true
+//            return
+//        }
+//
+//        rerender = false
+//
+//        if pickerImage1 == nil {
+//            self.pickerImage1 = PickerImage(width: Int(bounds.width), height: Int(bounds.height))
+//            self.pickerImage2 = PickerImage(width: Int(bounds.width), height: Int(bounds.height))
+//        }
+//
+//        opQueue.addOperation { () -> Void in
+//            // Write colors to data array
+//            if self.data1Shown { self.pickerImage2!.writeColorData(self.h, a:self.a) }
+//            else { self.pickerImage1!.writeColorData(self.h, a:self.a)}
+//
+//
+//            // flip images
+//            self.image = self.data1Shown ? self.pickerImage2!.image! : self.pickerImage1!.image!
+//            self.data1Shown = !self.data1Shown
+//
+//            // make changes visible
+//            OperationQueue.main.addOperation({ () -> Void in
+//                self.setNeedsDisplay()
+//                self.lock.unlock()
+//                if self.rerender {
+//                    self.renderBitmap()
+//                }
+//            })
+//        }
+//    }
     
     open override func draw(_ rect: CGRect) {
-        if let img = image {
-            img.draw(in: rect)
-        }
-        
+//        if let img = image {
+//            img.draw(in: rect)
+//        }
         //// Oval Drawing
+        
+        
         let ovalPath = UIBezierPath(ovalIn: CGRect(x: currentPoint.x - 5, y: currentPoint.y - 5, width: 10, height: 10))
         UIColor.white.setStroke()
         ovalPath.lineWidth = 1

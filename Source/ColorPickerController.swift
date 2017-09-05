@@ -45,6 +45,8 @@ open class ColorPickerController: NSObject {
         self.colorPicker = svPickerView
         self.colorWell = colorWell
         self.colorWell?.color = colorPicker.color
+        self.colorPicker.gradientHorizontal?.endColor = colorPicker.color
+        self.colorPicker.gradientHorizontal?.setNeedsDisplay()
         self.huePicker.setHueFromColor(colorPicker.color)
         super.init()
         self.colorPicker.onColorChange = {[unowned self] (color, finished) -> Void in
@@ -58,8 +60,9 @@ open class ColorPickerController: NSObject {
             let color = self.colorPicker.color
             self.colorWell?.previewColor = (finished) ? nil : color
             if(finished) {self.colorWell?.color = color}
+            self.colorPicker.gradientHorizontal?.endColor = color
+            self.colorPicker.gradientHorizontal?.setNeedsDisplay()
             self.onColorChange?(color, finished)
         }
     }
-    
 }

@@ -10,6 +10,7 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    @IBOutlet var gradientView: GradientView!
     @IBOutlet var colorWell:ColorWell!
     @IBOutlet var colorPicker:ColorPicker!
     @IBOutlet var huePicker:HuePicker!
@@ -28,9 +29,9 @@ class ViewController: UIViewController {
         /* you shoudln't interact directly with the individual components unless you want to do customization of the colorPicker itself. You can provide a closure to the pickerController, which is going to be invoked when the user is changing a color. Notice that you will receive intermediate color changes. You can use these by coloring the object the User is actually trying to color, so she/he gets a direct visual feedback on how a color changes the appearance of an object of interet. The ColorWell aids in this process by showing old and new color side-by-side.
         */
         pickerController?.onColorChange = {(color, finished) in
-
-                self.label?.textColor = color  // In this example we simply apply the color to a Label
-
+            
+            self.label?.textColor = color  // In this example we simply apply the color to a Label
+            self.gradientView.startColor = color
         }
     }
 
