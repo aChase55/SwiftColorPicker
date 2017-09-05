@@ -113,7 +113,15 @@ open class HuePicker: UIView {
                 d[i+3] = d[sourcei+3]
             }
         }
-        let colorSpace = CGColorSpaceCreateDeviceRGB()
+
+        var colorSpace:CGColorSpace
+        if #available(iOS 9.0, *) {
+            colorSpace = CGColorSpace.init(name: CGColorSpace.sRGB)!
+        }
+        else {
+            colorSpace = CGColorSpaceCreateDeviceRGB()
+        }
+
         let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedFirst.rawValue)
 
         let provider = CGDataProvider(data: Data(bytes: d, count: d.count * MemoryLayout<UInt8>.size) as CFData)

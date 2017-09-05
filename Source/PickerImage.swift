@@ -18,13 +18,22 @@ open class PickerImage {
     var height:Int
     
     fileprivate func createImageFromData(_ width:Int, height:Int) {
-        let colorSpace = CGColorSpaceCreateDeviceRGB()
+
+        var colorSpace:CGColorSpace
+        if #available(iOS 9.0, *) {
+            colorSpace = CGColorSpace.init(name: CGColorSpace.sRGB)!
+        }
+        else {
+            colorSpace = CGColorSpaceCreateDeviceRGB()
+        }
+
         let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedFirst.rawValue)
         provider = CGDataProvider(data: mutableData)
         imageSource = CGImageSourceCreateWithDataProvider(provider, nil)
         let cgimg = CGImage(width: Int(width), height: Int(height), bitsPerComponent: Int(8), bitsPerPixel: Int(32), bytesPerRow: Int(width) * Int(4),
-            space: colorSpace, bitmapInfo: bitmapInfo, provider: provider!, decode: nil, shouldInterpolate: true, intent: CGColorRenderingIntent.defaultIntent)
-        image = UIImage(cgImage: cgimg!)
+            space: colorSpace, bitmapInfo: bitmapInfo, provider: provider!, decode: nil, shouldInterpolate: true, intent: CGColorRenderingIntent.relativeColorimetric)
+        let newImage = cgimg!
+        image = UIImage(cgImage: newImage)
     }
     
     func changeSize(_ width:Int, height:Int) {
